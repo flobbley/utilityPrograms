@@ -2,7 +2,8 @@ WORDLIST_FILENAME = "words.txt"
 
 def loadWords():
     """
-    loads document in the form of a list where each line is a new list item
+    loads document in the form of a list where each line of
+    the subtitle document is a new list item
     """
     inFile = open(WORDLIST_FILENAME, 'r')
     line = inFile.readlines()
@@ -13,6 +14,7 @@ def indexes():
     returns indexes of the items in the document list that should be removed
     Indexes follow the pattern of:
     [0,1,4,5,8,9,12,13..]
+    corresponding to the line numbers that need to be removed (starting at line 0)
     """
     indexes = []
     count = 0
