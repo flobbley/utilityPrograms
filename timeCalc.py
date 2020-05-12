@@ -2,7 +2,7 @@ import datetime
 import pickle
 import os
 
-global clearVar
+global clearVar #this chunk of code just gives the proper command to clear the terminal screen depending on if you're using windows or mac
 syst = os.name
 if syst == 'nt':
     clearVar = "cls"
@@ -10,6 +10,9 @@ else:
     clearVar = "clear"
 
 class day:
+    """
+    stores information about individual days
+    """
     def __init__(self, date, hours, money, wage):
         self.date = date
         self.hours = hours
@@ -18,11 +21,17 @@ class day:
         self.wage = wage
         
 class timeTracker:
+    """
+    Main class, stores all data
+    """
     def __init__(self):
-        self.days = []
+        self.days = [] #stores individual days as a list of class instances
         self.wage = 45
         
     def load(self):
+        """
+        Load method, loads file on program startup if it exists, if not it creates one
+        """
         try:
             with open('timeTrack','rb') as f:
                 oldDays = pickle.load(f)
@@ -33,14 +42,20 @@ class timeTracker:
             self.wage = 45
 
     def save(self):
+        """
+        Save method
+        """
         with open('timeTrack','wb') as f:
             pickle.dump(self,f,protocol=2)
 
-    def addDate(self, date):
+    def addDate(self, date): #automatically adds new date on login if it hasn't been entered already
         newDay = day(date, 0, 0, self.wage)
         self.days.append(newDay)
 
-    def addTime(self, dateIndex): #put the hours into object with date
+    def addTime(self, dateIndex):
+        """
+        puts hours into requested date, not cumulative. Whatever number you put into it will be the number of hours it says you worked on that date
+        """
         while True:
             os.system(clearVar)
             print('How many hours did you work today?')
@@ -58,6 +73,9 @@ class timeTracker:
             break
 
     def addActivities(self, date):
+        """
+        adds the performed activities to the requested date
+        """
         while True:
             os.system(clearVar)
             print('What is the job number?')
@@ -75,6 +93,9 @@ class timeTracker:
             break
         
     def moneyAdder(self):
+        """
+        sums total days and hours worked, as well as total wages earned
+        """
         os.system(clearVar)
         total = 0
         daysWorked = 0
@@ -89,7 +110,9 @@ class timeTracker:
         input()
 
     def checkDate(self):
-        validResponse = ['y','n']
+        """
+        Returns all info about the requested date and allows you to make changes to it
+        """
         print('Which date? yyyy-mm-dd')
         checkDate = input()
         for i in range(len(self.days)-1,-1,-1):
@@ -130,6 +153,9 @@ class timeTracker:
                 break
 
     def changeWage(self):
+        """
+        let's you change your wage for calculations moving forward
+        """
         while True:
             os.system(clearVar)
             print("What is the new hourly wage?")
@@ -148,6 +174,9 @@ class timeTracker:
                     print("Invalid Input")
 
     def search(self):
+        """
+        searches days in the timeTrack days list for specified job number as dictionary key, or as an activity within the dict
+        """
         while True:
             os.system(clearVar)
             print("How do you want to search?")
@@ -157,7 +186,7 @@ class timeTracker:
             action = input()
             if action == '00':
                 break
-            elif action == '1':
+            elif action == '1': #search by job number
                 while True:
                     print('Please enter job number: ')
                     print("Enter 00 to go back")
@@ -168,15 +197,15 @@ class timeTracker:
                     else:
                         findListDates = []
                         findListActivities = []
-                        for i in range(len(self.days)-1,-1,-1):
+                        for i in range(len(self.days)-1,-1,-1): #checks dates from most newest to oldest for relevant job number
                             if num in self.days[i].activities:
                                 findListDates.append(self.days[i].date)
                                 findListActivities.append(self.days[i].activities[num])
-                        for i in range(0,len(findListDates)):
+                        for i in range(0,len(findListDates)): #prints dates of the requested job number as well as the associated activities
                             print(findListDates[i])
                             print(findListActivities[i])
                                                           
-            elif action == '2':
+            elif action == '2': #searches dates from newest to oldest for relevant activity, slow as it has to go through every job number in every day and check if one of the list items matches the searched term
                 while True:
                     print('Please enter an activity: ')
                     print("Enter 00 to go back")
@@ -215,7 +244,7 @@ today = str(datetime.date.today())#check current date
 
 lastDate = timeTrack.days[-1]#check last date entered
 
-if today != lastDate.date: #if current date is not the same as last date entered, reset hours to zero
+if today != lastDate.date: #if current date is not the same as last date entered, add new day to timeTrack
     timeTrack.addDate(today)
     timeTrack.save()
     print('Added today to the List!')
