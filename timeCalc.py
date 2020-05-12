@@ -75,6 +75,7 @@ class timeTracker:
             break
         
     def moneyAdder(self):
+        os.system(clearVar)
         total = 0
         daysWorked = 0
         hoursWorked = 0
@@ -161,6 +162,7 @@ class timeTracker:
                     print('Please enter job number: ')
                     print("Enter 00 to go back")
                     num = input()
+                    os.system(clearVar)
                     if num == '00':
                         break
                     else:
@@ -179,6 +181,7 @@ class timeTracker:
                     print('Please enter an activity: ')
                     print("Enter 00 to go back")
                     act = input()
+                    os.system(clearVar)
                     act = act.lower()
                     if act == '00':
                         break
